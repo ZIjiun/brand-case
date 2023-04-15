@@ -147,18 +147,30 @@
         mounted() {
             // 當頁面加載完成後，發送異步請求，獲取資料
 
-            var _this = this;
+            this.selectAll();
 
-            axios({
-                method: "get",
-                url: "http://localhost:8080/brand-case/selectAllServlet"
-            }).then(function (resp) {
-               _this.tableData = resp.data;
-            })
+            // var _this = this;
+            //
+            // axios({
+            //     method: "get",
+            //     url: "http://localhost:8080/brand-case/selectAllServlet"
+            // }).then(function (resp) {
+            //    _this.tableData = resp.data;
+            // })
         },
         methods: {
             // 當前頁碼
             currentPage: 4,
+            selectAll() {
+                var _this = this;
+
+                axios({
+                    method: "get",
+                    url: "http://localhost:8080/brand-case/selectAllServlet"
+                }).then(function (resp) {
+                    _this.tableData = resp.data;
+                })
+            },
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
                     return 'warning-row';
@@ -178,7 +190,29 @@
             },
             // 新增資料
             addBrand() {
-                console.log(this.brand);
+                // 發送 ajax 異步請求，增加資料
+
+                var _this = this;
+
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/brand-case/addServlet",
+                    data: _this.brand
+                }).then(function (resp) {
+                    if (resp.data == "success") {
+                        //增加成功
+
+                        //關閉對話窗口
+                        _this.dialogVisible = false;
+
+                        //重新查詢資料
+                        _this.selectAll();
+                        _this.$message({
+                            message: '增加成功',
+                            type: 'success'
+                        });
+                    }
+                })
             },
             handleSizeChange(val) {
                 console.log(`每頁 ${val} 條`);

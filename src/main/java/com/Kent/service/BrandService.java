@@ -10,4 +10,10 @@ public interface BrandService {
      * @return
      */
     List<Brand> selectAll();
+
+    /**
+     * 新增資料
+     * @param brand
+     */
+    void add(Brand brand);
 }

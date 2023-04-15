@@ -138,11 +138,24 @@
 
 <script src="./js/vue.js"></script>
 <script src="element-ui/lib/index.js"></script>
+<script src="js/axios-0.18.0.js"></script>
 <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
 
 <script>
     new Vue({
         el: '#app',
+        mounted() {
+            // 當頁面加載完成後，發送異步請求，獲取資料
+
+            var _this = this;
+
+            axios({
+                method: "get",
+                url: "http://localhost:8080/brand-case/selectAllServlet"
+            }).then(function (resp) {
+               _this.tableData = resp.data;
+            })
+        },
         methods: {
             // 當前頁碼
             currentPage: 4,
@@ -190,32 +203,7 @@
                 // 複選框選中資料集合
                 multipleSelection: [],
                 // 表格資料
-                tableData: [{
-                    brandName: 'TSMC',
-                    companyName: 'TSMC',
-                    ordered: '100',
-                    status: 1
-                }, {
-                    brandName: 'TSMC',
-                    companyName: 'TSMC',
-                    ordered: '100',
-                    status: 1
-                }, {
-                    brandName: 'TSMC',
-                    companyName: 'TSMC',
-                    ordered: '100',
-                    status: 1
-                }, {
-                    brandName: 'TSMC',
-                    companyName: 'TSMC',
-                    ordered: '100',
-                    status: 1
-                }, {
-                    brandName: 'TSMC',
-                    companyName: 'TSMC',
-                    ordered: '100',
-                    status: 1
-                }]
+                tableData: []
             }
         }
     })

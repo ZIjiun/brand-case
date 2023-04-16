@@ -75,6 +75,38 @@
             </el-form-item>
         </el-form>
     </el-dialog>
+
+    <!--修改資料對話框-->
+    <el-dialog
+            title="編輯品牌"
+            :visible.sync="editDialogVisible"
+            width="30%">
+        <el-form ref="form" :model="brandEdition" label-width="80px">
+            <el-form-item label="品牌名稱">
+                <el-input v-model="brandEdition.brandName"></el-input>
+            </el-form-item>
+            <el-form-item label="企業名稱">
+                <el-input v-model="brandEdition.companyName"></el-input>
+            </el-form-item>
+            <el-form-item label="排序">
+                <el-input v-model="brandEdition.ordered"></el-input>
+            </el-form-item>
+            <el-form-item label="備註">
+                <el-input type="textarea" v-model="brandEdition.description"></el-input>
+            </el-form-item>
+            <el-form-item label="狀態">
+                <el-switch v-model="brandEdition.status"
+                           active-value="1"
+                           inactive-value="0">
+                </el-switch>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="editBrand">提交</el-button>
+                <el-button @click="dialogVisible = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+
     <!--表格-->
     <template>
         <el-table
@@ -114,10 +146,12 @@
             <el-table-column
                     prop="status"
                     label="操作">
-                <el-row>
-                    <el-button type="primary">修改按钮</el-button>
-                    <el-button type="danger">刪除按钮</el-button>
-                </el-row>
+                <template slot-scope="scope">
+                    <el-row>
+                        <el-button type="primary" @click="handleEdit(scope.row)">修改按钮</el-button>
+                        <el-button type="danger">刪除按钮</el-button>
+                    </el-row>
+                </template>
             </el-table-column>
         </el-table>
     </template>
@@ -161,6 +195,28 @@
         methods: {
             // 當前頁碼
             currentPage: 4,
+            handleEdit(row) {
+                this.brandEdition = row;
+                this.editDialogVisible = true;
+            },
+            editBrand() {
+                var _this = this;
+
+                axios({
+                    method:"post",
+                    url: "http://localhost:8080/brand-case/updateServlet",
+                    data: this.brandEdition
+                }).then(function (resp) {
+                    if (resp.data === "success"){
+                        _this.editDialogVisible = false;
+                        _this.selectAll();
+                        _this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        })
+                    }
+                })
+            },
             selectAll() {
                 var _this = this;
 
@@ -223,6 +279,7 @@
         },
         data() {
             return {
+                editDialogVisible: false,
                 // 增加資料對話框是否展示的標記
                 dialogVisible: false,
                 // 品牌模型資料
@@ -233,6 +290,14 @@
                     id:"",
                     ordered:"",
                     description:""
+                },
+                brandEdition: {
+                    status: '',
+                    brandName: '',
+                    companyName: '',
+                    id: "",
+                    ordered: "",
+                    description: ""
                 },
                 // 複選框選中資料集合
                 multipleSelection: [],

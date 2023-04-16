@@ -4,6 +4,7 @@ import com.Kent.pojo.Brand;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -23,4 +24,12 @@ public interface BrandMapper {
      */
     @Insert("insert into tb_brand values (null, #{brandName}, #{companyName}, #{ordered}, #{description}, #{status})")
     public void add(Brand brand);
+
+    /**
+     * 更新品牌
+     * @param brand
+     */
+    @Update("update tb_brand set brand_name = #{brandName}, company_name = #{companyName}, ordered = #{ordered}, description = #{description} where id = #{id}")
+    public void update(Brand brand);
+
 }

@@ -46,4 +46,13 @@ public class BrandServiceImpl implements BrandService {
         // 5. 釋放資源
         sqlSession.close();
     }
+
+    @Override
+    public void update(Brand brand) {
+        SqlSession sqlSession = factory.openSession();
+        BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+        mapper.update(brand);
+        sqlSession.commit();
+        sqlSession.close();
+    }
 }

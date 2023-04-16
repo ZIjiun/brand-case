@@ -1,4 +1,4 @@
-package com.Kent.web.servlet;
+package com.Kent.web.servlet.old;
 
 import com.Kent.pojo.Brand;
 import com.Kent.service.BrandService;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/selectAllServlet")
+//@WebServlet("/selectAllServlet")
 public class SelectAllServlet extends HttpServlet {
 
     private BrandService brandService = new BrandServiceImpl();

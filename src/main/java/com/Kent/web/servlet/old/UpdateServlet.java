@@ -1,4 +1,4 @@
-package com.Kent.web.servlet;
+package com.Kent.web.servlet.old;
 
 import com.Kent.pojo.Brand;
 import com.Kent.service.BrandService;

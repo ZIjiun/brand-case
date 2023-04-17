@@ -35,4 +35,20 @@ public interface BrandMapper {
      */
     void deleteById(@Param("ids") int [] id);
 
+    /**
+     * 分頁查詢
+     * @param begin
+     * @param size
+     * @return
+     */
+    @Select("select  * from tb_brand limit #{begin} , #{size}")
+    @ResultMap("brandResultMap")
+    List<Brand> selectByPage(@Param("begin") int begin,@Param("size") int size);
+
+    /**
+     * 查詢總紀錄數
+     * @return
+     */
+    @Select("select count(*) from tb_brand")
+    int selectTotalCount();
 }

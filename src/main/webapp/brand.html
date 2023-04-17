@@ -165,7 +165,7 @@
                 :page-sizes="[5, 10, 15, 20]"
                 :page-size="10"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="12">
+                :total="totalCount">
         </el-pagination>
     </div>
 </div>
@@ -193,8 +193,6 @@
             // })
         },
         methods: {
-            // 當前頁碼
-            currentPage: 4,
             handleEdit(row) {
                 this.brandEdition = row;
                 this.editDialogVisible = true;
@@ -203,11 +201,11 @@
                 var _this = this;
 
                 axios({
-                    method:"post",
+                    method: "post",
                     url: "http://localhost:8080/brand-case/updateServlet",
                     data: this.brandEdition
                 }).then(function (resp) {
-                    if (resp.data === "success"){
+                    if (resp.data === "success") {
                         _this.editDialogVisible = false;
                         _this.selectAll();
                         _this.$message({
@@ -218,14 +216,29 @@
                 })
             },
             selectAll() {
+                // var _this = this;
+                //
+                // axios({
+                //     method: "get",
+                //     url: "http://localhost:8080/brand-case/brand/selectAll"
+                // }).then(function (resp) {
+                //     _this.tableData = resp.data;
+                // })
+
+                // 查詢分頁數據
                 var _this = this;
 
                 axios({
                     method: "get",
-                    url: "http://localhost:8080/brand-case/brand/selectAll"
+                    method: "get",
+                    url: "http://localhost:8080/brand-case/brand/selectByPage?currentPage=" + _this.currentPage + "&pageSize=" + _this.pageSize
                 }).then(function (resp) {
-                    _this.tableData = resp.data;
+                    // 設置表格數據
+                    _this.tableData = resp.data.rows; // [rows:[], totoalcount: XXX]
+                    // 設置總紀錄數
+                    _this.totalCount = resp.data.totalCount;
                 })
+
             },
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
@@ -271,10 +284,16 @@
                 })
             },
             handleSizeChange(val) {
-                console.log(`每頁 ${val} 條`);
+                // console.log(`每頁 ${val} 條`);
+                // 重新設置每頁顯示的條數
+                this.pageSize = val;
+                this.selectAll();
             },
             handleCurrentChange(val) {
-                console.log(`當前頁: ${val}`);
+                // console.log(`當前頁: ${val}`);
+                // 重新設置當前頁碼
+                this.currentPage = val;
+                this.selectAll();
             },
             // 批量刪除
             deleteByIds() {
@@ -311,8 +330,7 @@
                 */
 
                 // 彈出確認提示框
-                this.$confirm('此操作將删除該數據, 是否繼續?', '提示', {
-                }).then(() => {
+                this.$confirm('此操作將删除該數據, 是否繼續?', '提示', {}).then(() => {
                     // 用戶點擊確認按鈕
 
                     // 1. 創建 id 陣列 [1,2,3], 從 this.multipleSelection 獲取即可
@@ -325,7 +343,7 @@
                     var _this = this;
 
                     axios({
-                        method:"post",
+                        method: "post",
                         url: "http://localhost:8080/brand-case/brand/deleteByIds",
                         data: _this.selectedIds
                     }).then(function (resp) {
@@ -352,6 +370,11 @@
         },
         data() {
             return {
+                // 每頁顯示的條數
+                pageSize: 5,
+                // 當前頁碼
+                currentPage: 1,
+                totalCount: 100,
                 editDialogVisible: false,
                 // 增加資料對話框是否展示的標記
                 dialogVisible: false,
@@ -360,9 +383,9 @@
                     status: '',
                     brandName: '',
                     companyName: '',
-                    id:"",
-                    ordered:"",
-                    description:""
+                    id: "",
+                    ordered: "",
+                    description: ""
                 },
                 brandEdition: {
                     status: '',

@@ -1,6 +1,7 @@
 package com.Kent.web.servlet;
 
 import com.Kent.pojo.Brand;
+import com.Kent.pojo.PageBean;
 import com.Kent.service.BrandService;
 import com.Kent.service.impl.BrandServiceImpl;
 import com.alibaba.fastjson2.JSON;
@@ -71,4 +72,30 @@ public class BrandServlet extends BaseServlet{
         resp.getWriter().write("success");
     }
 
+    /**
+     * 分頁查詢
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void selectByPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        // 1. 接收 當前頁碼 和 每頁展示條數 ex: url?currentPage=1&pagesize=5
+        String _currentPage = req.getParameter("currentPage");
+        String _pageSize = req.getParameter("pageSize");
+
+        int currentPage = Integer.parseInt(_currentPage);
+        int pageSize = Integer.parseInt(_pageSize);
+
+        // 2. 調用 service 查詢
+        PageBean<Brand> pageBean = brandService.selectByPage(currentPage, pageSize);
+
+        // 3. 轉為 JSON
+        String jsonString = JSON.toJSONString(pageBean);
+
+        // 3. 寫數據
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write(jsonString);
+    }
 }

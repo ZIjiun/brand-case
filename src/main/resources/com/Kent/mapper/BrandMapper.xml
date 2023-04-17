@@ -8,4 +8,11 @@
         <result property="brandName" column="brand_name" />
         <result property="companyName" column="company_name" />
     </resultMap>
+
+    <delete id="deleteById">
+        delete from tb_brand where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

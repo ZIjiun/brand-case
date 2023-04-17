@@ -23,4 +23,10 @@ public interface BrandService {
      */
     void update(Brand brand);
 
+    /**
+     * 批量刪除
+     * @param ids
+     */
+    void deleteByIds(int[] ids);
+
 }

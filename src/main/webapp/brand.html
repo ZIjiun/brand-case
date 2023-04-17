@@ -41,7 +41,7 @@
 
     <!--按鈕-->
     <el-row>
-        <el-button type="danger">批量刪除</el-button>
+        <el-button type="danger" @click="deleteByIds">批量刪除</el-button>
         <el-button type="primary" @click="dialogVisible = true">新增</el-button>
     </el-row>
 
@@ -275,6 +275,79 @@
             },
             handleCurrentChange(val) {
                 console.log(`當前頁: ${val}`);
+            },
+            // 批量刪除
+            deleteByIds() {
+                /*
+                [
+                    {
+                        "brandName": "华为",
+                        "companyName": "华为技术有限公司",
+                        "description": "万物互联",
+                        "id": 1,
+                        "ordered": 7788852,
+                        "status": 0,
+                        "statusStr": "禁用"
+                    },
+                    {
+                        "brandName": "小米",
+                        "companyName": "小米科技有限公司",
+                        "description": "are you ok",
+                        "id": 2,
+                        "ordered": 100,
+                        "status": 1,
+                        "statusStr": "啟用"
+                    },
+                    {
+                        "brandName": "格力",
+                        "companyName": "格力电器股份有限公司",
+                        "description": "让世界爱上中国造",
+                        "id": 3,
+                        "ordered": 355236,
+                        "status": 1,
+                        "statusStr": "啟用"
+                    }
+                ]
+                */
+
+                // 彈出確認提示框
+                this.$confirm('此操作將删除該數據, 是否繼續?', '提示', {
+                }).then(() => {
+                    // 用戶點擊確認按鈕
+
+                    // 1. 創建 id 陣列 [1,2,3], 從 this.multipleSelection 獲取即可
+                    for (let i = 0; i < this.multipleSelection.length; i++) {
+                        this.selectedIds[i] = this.multipleSelection[i].id;
+                    }
+
+                    // 2. 發送 ajax 請求
+
+                    var _this = this;
+
+                    axios({
+                        method:"post",
+                        url: "http://localhost:8080/brand-case/brand/deleteByIds",
+                        data: _this.selectedIds
+                    }).then(function (resp) {
+                        if (resp.data === "success") {
+                            // 刪除成功
+
+                            // 重新查詢資料
+                            _this.selectAll();
+                            // 彈出訊息提示
+                            _this.$message({
+                                message: "刪除成功",
+                                type: "success"
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    // 用戶點擊取消按鈕
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         },
         data() {
@@ -299,6 +372,8 @@
                     ordered: "",
                     description: ""
                 },
+                // 被選中的 id 陣列
+                selectedIds: [],
                 // 複選框選中資料集合
                 multipleSelection: [],
                 // 表格資料

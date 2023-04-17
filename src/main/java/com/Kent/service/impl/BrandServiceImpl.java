@@ -55,4 +55,21 @@ public class BrandServiceImpl implements BrandService {
         sqlSession.commit();
         sqlSession.close();
     }
+
+    @Override
+    public void deleteByIds(int[] ids) {
+        // 2. 獲取 sqlSession 物件
+        SqlSession sqlSession = factory.openSession();
+
+        // 3. 獲取 BrandMapper
+        BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+
+        // 4. 調用方法
+        mapper.deleteById(ids);
+        sqlSession.commit();
+
+        // 5. 釋放資源
+        sqlSession.close();
+    }
+
 }

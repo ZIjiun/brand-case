@@ -45,4 +45,30 @@ public class BrandServlet extends BaseServlet{
         // 3. 響應成功標示
         resp.getWriter().write("success");
     }
+
+    /**
+     * 批量刪除
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void deleteByIds(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        // 接收資料 [1,2,3]
+        BufferedReader reader = req.getReader();
+        String params = reader.readLine(); // // JSON 字串
+        System.out.println(params);
+
+
+        // 轉為 int[]
+         int[] ids = JSON.parseObject(params, int[].class);
+
+        // 2. 調用 service 增加
+        brandService.deleteByIds(ids);
+
+        // 3. 響應成功標示
+        resp.getWriter().write("success");
+    }
+
 }

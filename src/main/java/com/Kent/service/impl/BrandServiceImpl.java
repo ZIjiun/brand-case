@@ -7,7 +7,6 @@ import com.Kent.service.BrandService;
 import com.Kent.util.SqlSessionFactoryUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.taglibs.standard.lang.jstl.test.beans.Factory;
 
 import java.util.List;
 
@@ -102,6 +101,37 @@ public class BrandServiceImpl implements BrandService {
         // 8. 釋放資源
         sqlSession.close();
 
+        return pageBean;
+    }
+
+    @Override
+    public PageBean<Brand> selectByPageAndCondition(int currentPage, int pageSize, Brand brand) {
+
+        SqlSession sqlSession = factory.openSession();
+        BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+
+        int begin = (currentPage - 1) * pageSize;
+        int size = pageSize;
+
+        // 處理 brand 條件，模糊表達式
+        String brandName = brand.getBrandName();
+        if (brandName != null && brandName.length() > 0) {
+            brand.setBrandName("%" + brandName + "%");
+        }
+
+        String companyName = brand.getCompanyName();
+        if (companyName != null && companyName.length() > 0) {
+            brand.setCompanyName("%" + companyName + "%");
+        }
+        List<Brand> rows = mapper.selectByPageAndCondition(begin, size, brand);
+        int totalCount = mapper.selectTotalCountByCondition(brand);
+
+        PageBean<Brand> pageBean = new PageBean<>();
+
+        pageBean.setRows(rows);
+        pageBean.setTotalCount(totalCount);
+
+        sqlSession.close();
         return pageBean;
     }
 }

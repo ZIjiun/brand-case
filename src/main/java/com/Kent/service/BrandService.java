@@ -38,4 +38,12 @@ public interface BrandService {
      */
     PageBean<Brand> selectByPage(int currentPage, int pageSize);
 
+    /**
+     * 分頁條件查詢
+     * @param currentPage
+     * @param pageSize
+     * @param brand
+     * @return
+     */
+    PageBean<Brand> selectByPageAndCondition(int currentPage, int pageSize, Brand brand);
 }

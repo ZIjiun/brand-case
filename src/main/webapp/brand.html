@@ -163,7 +163,7 @@
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
                 :page-sizes="[5, 10, 15, 20]"
-                :page-size="10"
+                :page-size="5"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="totalCount">
         </el-pagination>
@@ -229,9 +229,9 @@
                 var _this = this;
 
                 axios({
-                    method: "get",
-                    method: "get",
-                    url: "http://localhost:8080/brand-case/brand/selectByPage?currentPage=" + _this.currentPage + "&pageSize=" + _this.pageSize
+                    method: "post",
+                    url: "http://localhost:8080/brand-case/brand/selectByPageAndCondition?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
+                    data: this.brand
                 }).then(function (resp) {
                     // 設置表格數據
                     _this.tableData = resp.data.rows; // [rows:[], totoalcount: XXX]
@@ -256,6 +256,7 @@
             // 查詢方法
             onSubmit() {
                 console.log(this.brand);
+                this.selectAll();
             },
             // 新增資料
             addBrand() {

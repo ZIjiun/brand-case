@@ -51,4 +51,22 @@ public interface BrandMapper {
      */
     @Select("select count(*) from tb_brand")
     int selectTotalCount();
+
+    /**
+     * 分頁條件查詢
+     *
+     * @param begin
+     * @param size
+     * @return
+     */
+    @ResultMap("brandResultMap")
+    List<Brand> selectByPageAndCondition(@Param("begin") int begin, @Param("size") int size, @Param("brand") Brand brand);
+
+    /**
+     * 根據條件查詢總紀錄數
+     *
+     * @return
+     */
+    int selectTotalCountByCondition(Brand brand);
 }
+

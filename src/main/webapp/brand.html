@@ -232,11 +232,13 @@
                     method: "post",
                     url: "http://localhost:8080/brand-case/brand/selectByPageAndCondition?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
                     data: this.brand
-                }).then(function (resp) {
+                }).then((resp) => {
+                    // 箭頭函數裡面的 this，代表了 Vue 物件
+
                     // 設置表格數據
-                    _this.tableData = resp.data.rows; // [rows:[], totoalcount: XXX]
+                    this.tableData = resp.data.rows; // [rows:[], totoalcount: XXX]
                     // 設置總紀錄數
-                    _this.totalCount = resp.data.totalCount;
+                    this.totalCount = resp.data.totalCount;
                 })
 
             },
